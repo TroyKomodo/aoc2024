@@ -1,0 +1,15 @@
+[package]
+name = "day5"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "day5-part1"
+path = "src/part1.rs"
+
+[[bin]]
+name = "day5-part2"
+path = "src/part2.rs"
+
+[dependencies]
+utils = { path = "../../utils" }
