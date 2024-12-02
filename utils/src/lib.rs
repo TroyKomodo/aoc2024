@@ -1,11 +1,14 @@
 
 #[track_caller]
-pub fn parse<T: std::str::FromStr>(input: &str) -> T
+pub fn parse<T: std::str::FromStr + std::fmt::Display>(input: &str) -> T
 where
     T::Err: std::fmt::Debug,
 {
     match input.parse() {
-        Ok(value) => value,
+        Ok(value) => {
+            debug!(from = %std::panic::Location::caller(), input = %input, value = %value);
+            value
+        },
         Err(e) => {
             error!(from = %std::panic::Location::caller(), input = %input, "{:?}", e);
             std::process::exit(1);
@@ -13,7 +16,7 @@ where
     }
 }
 
-pub use {itertools, tracing::{info, error, self}};
+pub use {itertools, tracing::{info, error, debug, self}};
 
 pub fn init_tracing() {
     tracing_subscriber::fmt::fmt()

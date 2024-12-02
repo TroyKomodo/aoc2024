@@ -3,18 +3,14 @@ use utils::*;
 fn main() {
     let input = init!();
 
-    let mut list1 = Vec::new();
-    let mut list2 = Vec::new();
-
-    input.lines().into_iter().for_each(|line| {
+    let (mut list1, mut list2) = input.lines().into_iter().map(|line| {
         let mut split = line.split_whitespace();
 
         let first = parse::<i64>(split.next().unwrap());
         let second = parse::<i64>(split.next().unwrap());
 
-        list1.push(first);
-        list2.push(second);
-    });
+        (first, second)
+    }).unzip::<_, _, Vec<_>, Vec<_>>();
 
     list1.sort();
     list2.sort();   
@@ -25,5 +21,5 @@ fn main() {
         dist += (a - b).abs();
     }
 
-    println!("dist: {}", dist);
+    info!("result: {}", dist);
 }
