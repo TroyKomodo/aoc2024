@@ -1,6 +1,5 @@
 use utils::*;
 
-
 fn fast(numbers: &mut [i64]) -> bool {
     if numbers.len() < 2 {
         return true;
@@ -17,9 +16,13 @@ fn fast(numbers: &mut [i64]) -> bool {
         let first = numbers[i];
         let second = numbers[i + 1];
 
-        let success = passes(first, second, increasing) && (i != 0 || numbers.get(i + 2).is_none_or(|third| passes(second, *third, increasing)));
+        let success = passes(first, second, increasing)
+            && (i != 0
+                || numbers
+                    .get(i + 2)
+                    .is_none_or(|third| passes(second, *third, increasing)));
 
-        if !success {  
+        if !success {
             if failed {
                 return false;
             }
@@ -31,25 +34,34 @@ fn fast(numbers: &mut [i64]) -> bool {
 
             match (prev, third) {
                 (Some(prev), Some(third)) => {
-                    let new_increasing = if i == 1 {
-                        prev < second
-                    } else {
-                        increasing
-                    };
+                    let new_increasing = if i == 1 { prev < second } else { increasing };
 
-                    if passes(prev, second, new_increasing) && passes(second, third, new_increasing) { // try to skip first
+                    if passes(prev, second, new_increasing) && passes(second, third, new_increasing)
+                    {
+                        // try to skip first
                         numbers[i] = prev;
                         increasing = new_increasing;
-                    } else if passes(first, third, increasing) { // try to skip second
+                    } else if passes(first, third, increasing) {
+                        // try to skip second
                         numbers[i + 1] = first;
                     } else {
                         return false;
                     }
                 }
                 (None, Some(third)) => {
-                    if passes(second, third, second < third) && numbers.get(i + 3).map_or(true, |forth| passes(third, *forth, second < third)) { // try to skip first
+                    if passes(second, third, second < third)
+                        && numbers
+                            .get(i + 3)
+                            .map_or(true, |forth| passes(third, *forth, second < third))
+                    {
+                        // try to skip first
                         increasing = second < third;
-                    } else if passes(first, third, first < third) && numbers.get(i + 3).map_or(true, |forth| passes(third, *forth, first < third)) { // try to skip second
+                    } else if passes(first, third, first < third)
+                        && numbers
+                            .get(i + 3)
+                            .map_or(true, |forth| passes(third, *forth, first < third))
+                    {
+                        // try to skip second
                         numbers[i + 1] = first;
                         increasing = first < third;
                     } else {
@@ -67,11 +79,17 @@ fn fast(numbers: &mut [i64]) -> bool {
 fn main() {
     let input = init!();
 
-    let safe = input.lines().filter(|line| {
-        let mut numbers = line.split_whitespace().map(|s| parse::<i64>(s)).collect::<Vec<_>>();
+    let safe = input
+        .lines()
+        .filter(|line| {
+            let mut numbers = line
+                .split_whitespace()
+                .map(|s| parse::<i64>(s))
+                .collect::<Vec<_>>();
 
-        fast(&mut numbers)
-    }).count();
+            fast(&mut numbers)
+        })
+        .count();
 
     info!("safe: {}", safe);
 }

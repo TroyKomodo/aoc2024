@@ -13,7 +13,7 @@ macro_rules! parse_char {
 macro_rules! parse_number {
     ($input:expr) => {{
         let mut number = None;
-        
+
         for _ in 0..3 {
             let Some(next) = $input.peek() else {
                 break;
